@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { ChartBarIcon } from './icons';
+import Spinner from './Spinner';
 
 interface InfographicsPanelProps {
   onApplyInfographic: (prompt: string, data: string) => void;
@@ -53,6 +54,12 @@ const InfographicsPanel: React.FC<InfographicsPanelProps> = ({ onApplyInfographi
         </div>
       </div>
 
+      {isLoading ? (
+        <div className="w-full mt-2 flex items-center justify-center bg-gray-800/80 text-white font-bold py-4 px-6 rounded-lg border border-gray-700">
+          <Spinner className="w-6 h-6 mr-3" />
+          Generating Infographic...
+        </div>
+      ) : (
         <button
             onClick={handleApply}
             className="w-full mt-2 flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-fuchsia-800 disabled:to-cyan-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
@@ -61,6 +68,7 @@ const InfographicsPanel: React.FC<InfographicsPanelProps> = ({ onApplyInfographi
             <ChartBarIcon className="w-5 h-5 mr-2" />
             Generate Infographic
         </button>
+      )}
     </div>
   );
 };

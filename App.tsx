@@ -41,7 +41,7 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<File[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [prompt, setPrompt] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingTab, setLoadingTab] = useState<Tab | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [editHotspot, setEditHotspot] = useState<{ x: number, y: number } | null>(null);
   const [displayHotspot, setDisplayHotspot] = useState<{ x: number, y: number } | null>(null);
@@ -120,10 +120,7 @@ const App: React.FC = () => {
   }, []);
 
   const handleGenerate = useCallback(async () => {
-    if (!currentImage) {
-      setError('No image loaded to edit.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
     
     if (!prompt.trim()) {
         setError('Please enter a description for your edit.');
@@ -135,7 +132,7 @@ const App: React.FC = () => {
         return;
     }
 
-    setIsLoading(true);
+    setLoadingTab('retouch');
     setError(null);
     
     try {
@@ -149,17 +146,14 @@ const App: React.FC = () => {
         setError(`Failed to generate the image. ${errorMessage}`);
         console.error(err);
     } finally {
-        setIsLoading(false);
+        setLoadingTab(null);
     }
-  }, [currentImage, prompt, editHotspot, addImageToHistory]);
+  }, [currentImage, prompt, editHotspot, addImageToHistory, loadingTab]);
   
   const handleApplyFilter = useCallback(async (filterPrompt: string) => {
-    if (!currentImage) {
-      setError('No image loaded to apply a filter to.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
     
-    setIsLoading(true);
+    setLoadingTab('filters');
     setError(null);
     
     try {
@@ -171,17 +165,14 @@ const App: React.FC = () => {
         setError(`Failed to apply the filter. ${errorMessage}`);
         console.error(err);
     } finally {
-        setIsLoading(false);
+        setLoadingTab(null);
     }
-  }, [currentImage, addImageToHistory]);
+  }, [currentImage, addImageToHistory, loadingTab]);
   
   const handleApplyAdjustment = useCallback(async (adjustmentPrompt: string) => {
-    if (!currentImage) {
-      setError('No image loaded to apply an adjustment to.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
     
-    setIsLoading(true);
+    setLoadingTab('adjust');
     setError(null);
     
     try {
@@ -193,17 +184,14 @@ const App: React.FC = () => {
         setError(`Failed to apply the adjustment. ${errorMessage}`);
         console.error(err);
     } finally {
-        setIsLoading(false);
+        setLoadingTab(null);
     }
-  }, [currentImage, addImageToHistory]);
+  }, [currentImage, addImageToHistory, loadingTab]);
 
   const handleGenerateVariations = useCallback(async (variationPrompt: string) => {
-    if (!currentImage) {
-      setError('No image loaded to generate variations from.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
 
-    setIsLoading(true);
+    setLoadingTab('variations');
     setError(null);
     setVariations([]);
     setSelectedVariationIndex(null);
@@ -219,9 +207,9 @@ const App: React.FC = () => {
       setError(`Failed to generate variations. ${errorMessage}`);
       console.error(err);
     } finally {
-      setIsLoading(false);
+      setLoadingTab(null);
     }
-  }, [currentImage]);
+  }, [currentImage, loadingTab]);
   
   const handleApplyVariation = useCallback(() => {
     if (selectedVariationIndex === null || !variations[selectedVariationIndex]) {
@@ -233,12 +221,9 @@ const App: React.FC = () => {
   }, [selectedVariationIndex, variations, addImageToHistory]);
 
   const handleApplyInfographic = useCallback(async (infographicPrompt: string, infographicData: string) => {
-    if (!currentImage) {
-      setError('No image loaded to add an infographic to.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
 
-    setIsLoading(true);
+    setLoadingTab('infographics');
     setError(null);
 
     try {
@@ -250,17 +235,14 @@ const App: React.FC = () => {
         setError(`Failed to generate the infographic. ${errorMessage}`);
         console.error(err);
     } finally {
-        setIsLoading(false);
+        setLoadingTab(null);
     }
-  }, [currentImage, addImageToHistory]);
+  }, [currentImage, addImageToHistory, loadingTab]);
 
   const handleGenerateAnimation = useCallback(async (animationPrompt: string) => {
-    if (!currentImage) {
-      setError('No image loaded to animate.');
-      return;
-    }
+    if (!currentImage || loadingTab) return;
 
-    setIsLoading(true);
+    setLoadingTab('animate');
     setError(null);
     setVideoUrl(null);
 
@@ -276,10 +258,10 @@ const App: React.FC = () => {
         setError(`Failed to generate the animation. ${errorMessage}`);
         console.error(err);
     } finally {
-        setIsLoading(false);
+        setLoadingTab(null);
         setAnimationStatusMessage('');
     }
-  }, [currentImage]);
+  }, [currentImage, loadingTab]);
 
 
   const handleApplyCrop = useCallback(() => {
@@ -398,7 +380,7 @@ const App: React.FC = () => {
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    if (activeTab !== 'retouch' || videoUrl) return;
+    if (activeTab !== 'retouch' || videoUrl || loadingTab) return;
     
     const img = e.currentTarget;
     const rect = img.getBoundingClientRect();
@@ -478,7 +460,7 @@ const App: React.FC = () => {
             src={currentImageUrl}
             alt="Current"
             onClick={handleImageClick}
-            className={`absolute top-0 left-0 w-full h-auto object-contain max-h-[60vh] rounded-xl transition-opacity duration-200 ease-in-out ${isComparing ? 'opacity-0' : 'opacity-100'} ${activeTab === 'retouch' ? 'cursor-crosshair' : ''}`}
+            className={`absolute top-0 left-0 w-full h-auto object-contain max-h-[60vh] rounded-xl transition-opacity duration-200 ease-in-out ${isComparing ? 'opacity-0' : 'opacity-100'} ${activeTab === 'retouch' && !loadingTab ? 'cursor-crosshair' : ''}`}
         />
       </div>
     );
@@ -498,18 +480,6 @@ const App: React.FC = () => {
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-6 animate-fade-in">
         <div className="relative w-full shadow-2xl rounded-xl overflow-hidden bg-black/20">
-            {isLoading && (
-                <div className="absolute inset-0 bg-black/70 z-30 flex flex-col items-center justify-center gap-4 animate-fade-in">
-                    <Spinner />
-                    <p className="text-gray-300 text-center px-4">
-                        {activeTab === 'variations' && 'AI is generating variations...'}
-                        {activeTab === 'infographics' && 'AI is designing your infographic...'}
-                        {activeTab === 'animate' && (animationStatusMessage || 'AI is animating your image...')}
-                        {!['variations', 'infographics', 'animate'].includes(activeTab) && 'AI is working its magic...'}
-                    </p>
-                </div>
-            )}
-            
             {activeTab === 'crop' ? (
               <ReactCrop 
                 crop={crop} 
@@ -522,7 +492,7 @@ const App: React.FC = () => {
               </ReactCrop>
             ) : imageDisplay }
 
-            {displayHotspot && !isLoading && activeTab === 'retouch' && (
+            {displayHotspot && !loadingTab && activeTab === 'retouch' && (
                 <div 
                     className="absolute rounded-full w-6 h-6 bg-cyan-400/50 border-2 border-white pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
                     style={{ left: `${displayHotspot.x}px`, top: `${displayHotspot.y}px` }}
@@ -537,7 +507,8 @@ const App: React.FC = () => {
                  <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`w-full capitalize font-semibold py-3 px-4 rounded-md transition-all duration-200 text-sm md:text-base ${
+                    disabled={loadingTab !== null}
+                    className={`w-full capitalize font-semibold py-3 px-4 rounded-md transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                         activeTab === tab 
                         ? 'bg-gradient-to-br from-fuchsia-500 to-cyan-400 text-white shadow-lg shadow-fuchsia-500/40' 
                         : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -561,21 +532,27 @@ const App: React.FC = () => {
                             onChange={(e) => setPrompt(e.target.value)}
                             placeholder={editHotspot ? "e.g., 'change my shirt color to blue'" : "First click a point on the image"}
                             className="flex-grow bg-gray-800 border border-gray-700 text-gray-200 rounded-lg p-5 text-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60"
-                            disabled={isLoading || !editHotspot}
+                            disabled={loadingTab !== null || !editHotspot}
                         />
-                        <button 
-                            type="submit"
-                            className="bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-5 px-8 text-lg rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-fuchsia-800 disabled:to-cyan-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
-                            disabled={isLoading || !prompt.trim() || !editHotspot}
-                        >
-                            Generate
-                        </button>
+                        {loadingTab === 'retouch' ? (
+                            <div className="flex items-center justify-center bg-gray-800/80 text-white font-bold py-5 px-8 text-lg rounded-lg border border-gray-700 w-[165px]">
+                                <Spinner className="h-6 w-6" />
+                            </div>
+                        ) : (
+                            <button 
+                                type="submit"
+                                className="bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-5 px-8 text-lg rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+                                disabled={loadingTab !== null || !prompt.trim() || !editHotspot}
+                            >
+                                Generate
+                            </button>
+                        )}
                     </form>
                 </div>
             )}
-            {activeTab === 'crop' && <CropPanel onApplyCrop={handleApplyCrop} onSetAspect={setAspect} isLoading={isLoading} isCropping={!!completedCrop?.width && completedCrop.width > 0} />}
-            {activeTab === 'adjust' && <AdjustmentPanel onApplyAdjustment={handleApplyAdjustment} isLoading={isLoading} />}
-            {activeTab === 'filters' && <FilterPanel onApplyFilter={handleApplyFilter} isLoading={isLoading} />}
+            {activeTab === 'crop' && <CropPanel onApplyCrop={handleApplyCrop} onSetAspect={setAspect} isLoading={loadingTab !== null} isCropping={!!completedCrop?.width && completedCrop.width > 0} />}
+            {activeTab === 'adjust' && <AdjustmentPanel onApplyAdjustment={handleApplyAdjustment} isLoading={loadingTab === 'adjust'} />}
+            {activeTab === 'filters' && <FilterPanel onApplyFilter={handleApplyFilter} isLoading={loadingTab === 'filters'} />}
             {activeTab === 'variations' && (
                 <VariationsPanel 
                     onGenerateVariations={handleGenerateVariations}
@@ -583,17 +560,17 @@ const App: React.FC = () => {
                     variations={variations}
                     selectedVariationIndex={selectedVariationIndex}
                     onSelectVariation={setSelectedVariationIndex}
-                    isLoading={isLoading}
+                    isLoading={loadingTab === 'variations'}
                 />
             )}
-            {activeTab === 'infographics' && <InfographicsPanel onApplyInfographic={handleApplyInfographic} isLoading={isLoading} />}
-            {activeTab === 'animate' && <AnimatePanel onGenerateAnimation={handleGenerateAnimation} isLoading={isLoading} />}
+            {activeTab === 'infographics' && <InfographicsPanel onApplyInfographic={handleApplyInfographic} isLoading={loadingTab === 'infographics'} />}
+            {activeTab === 'animate' && <AnimatePanel onGenerateAnimation={handleGenerateAnimation} isLoading={loadingTab === 'animate'} statusMessage={animationStatusMessage} />}
         </div>
         
         <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
             <button 
                 onClick={handleUndo}
-                disabled={!canUndo}
+                disabled={!canUndo || loadingTab !== null}
                 className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
                 aria-label="Undo last action"
             >
@@ -602,7 +579,7 @@ const App: React.FC = () => {
             </button>
             <button 
                 onClick={handleRedo}
-                disabled={!canRedo}
+                disabled={!canRedo || loadingTab !== null}
                 className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
                 aria-label="Redo last action"
             >
@@ -619,7 +596,8 @@ const App: React.FC = () => {
                   onMouseLeave={() => setIsComparing(false)}
                   onTouchStart={() => setIsComparing(true)}
                   onTouchEnd={() => setIsComparing(false)}
-                  className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base"
+                  disabled={loadingTab !== null}
+                  className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Press and hold to see original image"
               >
                   <EyeIcon className="w-5 h-5 mr-2" />
@@ -629,21 +607,23 @@ const App: React.FC = () => {
 
             <button 
                 onClick={handleReset}
-                disabled={!canUndo}
+                disabled={!canUndo || loadingTab !== null}
                 className="text-center bg-transparent border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/10 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent"
               >
                 Reset
             </button>
             <button 
                 onClick={handleUploadNew}
-                className="text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base"
+                disabled={loadingTab !== null}
+                className="text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 Upload New
             </button>
 
             <button 
                 onClick={handleDownload}
-                className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-green-600 to-green-500 text-white font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base"
+                disabled={loadingTab !== null}
+                className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-green-600 to-green-500 text-white font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:from-green-800 disabled:to-green-700"
             >
                 {videoUrl ? 'Download Video' : 'Download Image'}
             </button>

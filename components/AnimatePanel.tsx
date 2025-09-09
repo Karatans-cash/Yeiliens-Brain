@@ -5,13 +5,15 @@
 
 import React, { useState } from 'react';
 import { FilmIcon } from './icons';
+import Spinner from './Spinner';
 
 interface AnimatePanelProps {
   onGenerateAnimation: (prompt: string) => void;
   isLoading: boolean;
+  statusMessage: string;
 }
 
-const AnimatePanel: React.FC<AnimatePanelProps> = ({ onGenerateAnimation, isLoading }) => {
+const AnimatePanel: React.FC<AnimatePanelProps> = ({ onGenerateAnimation, isLoading, statusMessage }) => {
   const [selectedPresetPrompt, setSelectedPresetPrompt] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState('');
 
@@ -67,14 +69,21 @@ const AnimatePanel: React.FC<AnimatePanelProps> = ({ onGenerateAnimation, isLoad
         disabled={isLoading}
       />
 
-      <button
-          onClick={handleGenerate}
-          className="w-full mt-2 flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-fuchsia-800 disabled:to-cyan-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
-          disabled={isLoading || !activePrompt.trim()}
-      >
-          <FilmIcon className="w-5 h-5 mr-2" />
-          Generate Animation
-      </button>
+      {isLoading ? (
+          <div className="w-full mt-2 flex items-center justify-center bg-gray-800/80 text-white font-bold py-4 px-6 rounded-lg border border-gray-700">
+            <Spinner className="w-6 h-6 mr-3" />
+            {statusMessage || 'Animating your image...'}
+          </div>
+      ) : (
+        <button
+            onClick={handleGenerate}
+            className="w-full mt-2 flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-fuchsia-800 disabled:to-cyan-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+            disabled={isLoading || !activePrompt.trim()}
+        >
+            <FilmIcon className="w-5 h-5 mr-2" />
+            Generate Animation
+        </button>
+      )}
     </div>
   );
 };
