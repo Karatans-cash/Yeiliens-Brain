@@ -403,12 +403,12 @@ const App: React.FC = () => {
   const renderContent = () => {
     if (error) {
        return (
-           <div className="text-center animate-fade-in bg-red-500/10 border border-red-500/20 p-8 rounded-lg max-w-2xl mx-auto flex flex-col items-center gap-4">
-            <h2 className="text-2xl font-bold text-red-300">An Error Occurred</h2>
-            <p className="text-md text-red-400">{error}</p>
+           <div className="text-center animate-fade-in bg-[#E96693]/10 border border-[#E96693]/20 p-8 rounded-lg max-w-2xl mx-auto flex flex-col items-center gap-4">
+            <h2 className="text-2xl font-bold text-[#E96693]">An Error Occurred</h2>
+            <p className="text-md text-[#E96693]/80">{error}</p>
             <button
                 onClick={() => setError(null)}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg text-md transition-colors"
+                className="bg-[#E96693] hover:bg-opacity-80 text-white font-bold py-2 px-6 rounded-lg text-md transition-colors"
               >
                 Try Again
             </button>
@@ -427,13 +427,13 @@ const App: React.FC = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setVideoUrl(null)}
-              className="text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base"
+              className="text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base"
             >
               Back to Editor
             </button>
             <button 
                 onClick={handleDownload}
-                className="bg-gradient-to-br from-green-600 to-green-500 text-white font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base"
+                className="bg-gradient-to-br from-[#63A798] to-[#96D6C9] text-[#03110F] font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base"
             >
                 Download Video
             </button>
@@ -494,15 +494,15 @@ const App: React.FC = () => {
 
             {displayHotspot && !loadingTab && activeTab === 'retouch' && (
                 <div 
-                    className="absolute rounded-full w-6 h-6 bg-cyan-400/50 border-2 border-white pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
+                    className="absolute rounded-full w-6 h-6 bg-[#50FFE5]/50 border-2 border-white pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
                     style={{ left: `${displayHotspot.x}px`, top: `${displayHotspot.y}px` }}
                 >
-                    <div className="absolute inset-0 rounded-full w-6 h-6 animate-ping bg-cyan-300"></div>
+                    <div className="absolute inset-0 rounded-full w-6 h-6 animate-ping bg-[#50FFE5]"></div>
                 </div>
             )}
         </div>
         
-        <div className="w-full bg-gray-800/80 border border-gray-700/80 rounded-lg p-2 flex items-center justify-center gap-1.5 backdrop-blur-sm">
+        <div className="w-full bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-2 flex items-center justify-center gap-1.5 backdrop-blur-sm">
             {(['retouch', 'adjust', 'filters', 'crop', 'variations', 'infographics', 'animate'] as Tab[]).map(tab => (
                  <button
                     key={tab}
@@ -510,8 +510,8 @@ const App: React.FC = () => {
                     disabled={loadingTab !== null}
                     className={`w-full capitalize font-semibold py-3 px-4 rounded-md transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
                         activeTab === tab 
-                        ? 'bg-gradient-to-br from-fuchsia-500 to-cyan-400 text-white shadow-lg shadow-fuchsia-500/40' 
-                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                        ? 'bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white shadow-lg shadow-[#E96693]/40' 
+                        : 'text-[#63A798] hover:text-[#EDEBE4] hover:bg-white/10'
                     }`}
                 >
                     {tab}
@@ -522,7 +522,7 @@ const App: React.FC = () => {
         <div className="w-full">
             {activeTab === 'retouch' && (
                 <div className="flex flex-col items-center gap-4">
-                    <p className="text-md text-gray-400">
+                    <p className="text-md text-[#63A798]">
                         {editHotspot ? 'Great! Now describe your localized edit below.' : 'Click an area on the image to make a precise edit.'}
                     </p>
                     <form onSubmit={(e) => { e.preventDefault(); handleGenerate(); }} className="w-full flex items-center gap-2">
@@ -531,17 +531,17 @@ const App: React.FC = () => {
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                             placeholder={editHotspot ? "e.g., 'change my shirt color to blue'" : "First click a point on the image"}
-                            className="flex-grow bg-gray-800 border border-gray-700 text-gray-200 rounded-lg p-5 text-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60"
+                            className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-5 text-lg focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60"
                             disabled={loadingTab !== null || !editHotspot}
                         />
                         {loadingTab === 'retouch' ? (
-                            <div className="flex items-center justify-center bg-gray-800/80 text-white font-bold py-5 px-8 text-lg rounded-lg border border-gray-700 w-[165px]">
+                            <div className="flex items-center justify-center bg-[#03110F]/80 text-white font-bold py-5 px-8 text-lg rounded-lg border border-[#267364] w-[165px]">
                                 <Spinner className="h-6 w-6" />
                             </div>
                         ) : (
                             <button 
                                 type="submit"
-                                className="bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-5 px-8 text-lg rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+                                className="bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white font-bold py-5 px-8 text-lg rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-[#50FFE5]/20 hover:shadow-xl hover:shadow-[#50FFE5]/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
                                 disabled={loadingTab !== null || !prompt.trim() || !editHotspot}
                             >
                                 Generate
@@ -571,7 +571,7 @@ const App: React.FC = () => {
             <button 
                 onClick={handleUndo}
                 disabled={!canUndo || loadingTab !== null}
-                className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
+                className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
                 aria-label="Undo last action"
             >
                 <UndoIcon className="w-5 h-5 mr-2" />
@@ -580,14 +580,14 @@ const App: React.FC = () => {
             <button 
                 onClick={handleRedo}
                 disabled={!canRedo || loadingTab !== null}
-                className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
+                className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
                 aria-label="Redo last action"
             >
                 <RedoIcon className="w-5 h-5 mr-2" />
                 Redo
             </button>
             
-            <div className="h-6 w-px bg-gray-600 mx-1 hidden sm:block"></div>
+            <div className="h-6 w-px bg-[#267364] mx-1 hidden sm:block"></div>
 
             {canUndo && (
               <button 
@@ -597,7 +597,7 @@ const App: React.FC = () => {
                   onTouchStart={() => setIsComparing(true)}
                   onTouchEnd={() => setIsComparing(false)}
                   disabled={loadingTab !== null}
-                  className="flex items-center justify-center text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Press and hold to see original image"
               >
                   <EyeIcon className="w-5 h-5 mr-2" />
@@ -608,14 +608,14 @@ const App: React.FC = () => {
             <button 
                 onClick={handleReset}
                 disabled={!canUndo || loadingTab !== null}
-                className="text-center bg-transparent border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/10 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent"
+                className="text-center bg-transparent border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/10 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent"
               >
                 Reset
             </button>
             <button 
                 onClick={handleUploadNew}
                 disabled={loadingTab !== null}
-                className="text-center bg-white/10 border border-white/20 text-gray-200 font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 Upload New
             </button>
@@ -623,7 +623,7 @@ const App: React.FC = () => {
             <button 
                 onClick={handleDownload}
                 disabled={loadingTab !== null}
-                className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-green-600 to-green-500 text-white font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:from-green-800 disabled:to-green-700"
+                className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-[#63A798] to-[#96D6C9] text-[#03110F] font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-800 disabled:to-gray-700"
             >
                 {videoUrl ? 'Download Video' : 'Download Image'}
             </button>
@@ -633,7 +633,7 @@ const App: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen text-gray-100 flex flex-col">
+    <div className="min-h-screen text-[#EDEBE4] flex flex-col">
       <Header />
       <main className={`flex-grow w-full max-w-[1600px] mx-auto p-4 md:p-8 flex justify-center ${currentImage ? 'items-start' : 'items-center'}`}>
         {renderContent()}

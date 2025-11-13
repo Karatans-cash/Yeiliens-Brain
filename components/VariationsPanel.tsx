@@ -54,8 +54,8 @@ const VariationsPanel: React.FC<VariationsPanelProps> = ({
   };
 
   return (
-    <div className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-4 flex flex-col gap-4 animate-fade-in backdrop-blur-sm">
-      <h3 className="text-lg font-semibold text-center text-gray-300">Generate Creative Variations</h3>
+    <div className="w-full bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-4 flex flex-col gap-4 animate-fade-in backdrop-blur-sm">
+      <h3 className="text-lg font-semibold text-center text-[#EDEBE4]">Generate Creative Variations</h3>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {presets.map(preset => (
@@ -63,7 +63,7 @@ const VariationsPanel: React.FC<VariationsPanelProps> = ({
             key={preset.name}
             onClick={() => handlePresetClick(preset.prompt)}
             disabled={isLoading}
-            className={`w-full text-center bg-white/10 border border-transparent text-gray-200 font-semibold py-3 px-4 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/20 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed ${selectedPresetPrompt === preset.prompt ? 'ring-2 ring-offset-2 ring-offset-gray-800 ring-cyan-500' : ''}`}
+            className={`w-full text-center bg-white/10 border border-transparent text-[#EDEBE4] font-semibold py-3 px-4 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/20 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed ${selectedPresetPrompt === preset.prompt ? 'ring-2 ring-offset-2 ring-offset-[#267364] ring-[#50FFE5]' : ''}`}
           >
             {preset.name}
           </button>
@@ -76,17 +76,17 @@ const VariationsPanel: React.FC<VariationsPanelProps> = ({
           value={customPrompt}
           onChange={handleCustomChange}
           placeholder="Or describe a custom style (e.g., '3D render, cyberpunk aesthetic')"
-          className="flex-grow bg-gray-800 border border-gray-600 text-gray-200 rounded-lg p-4 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
+          className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-4 focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
           disabled={isLoading}
         />
         {isLoading ? (
-          <div className="flex items-center justify-center bg-gray-800/80 text-white font-bold py-4 px-6 rounded-lg border border-gray-700 w-[158px]">
+          <div className="flex items-center justify-center bg-[#03110F]/80 text-white font-bold py-4 px-6 rounded-lg border border-[#267364] w-[158px]">
             <Spinner className="w-6 h-6" />
           </div>
         ) : (
           <button
               type="submit"
-              className="flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-cyan-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-fuchsia-800 disabled:to-cyan-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+              className="flex items-center justify-center bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-[#50FFE5]/20 hover:shadow-xl hover:shadow-[#50FFE5]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-gray-700 disabled:to-gray-800 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
               disabled={isLoading || !activePrompt?.trim()}
           >
               <SparkleIcon className="w-5 h-5 mr-2" />
@@ -97,17 +97,17 @@ const VariationsPanel: React.FC<VariationsPanelProps> = ({
 
       {variations.length > 0 && !isLoading && (
         <div className="animate-fade-in flex flex-col gap-4 pt-2">
-          <p className="text-center text-gray-400">Select your favorite variation below:</p>
+          <p className="text-center text-[#63A798]">Select your favorite variation below:</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {variations.map((src, index) => (
               <button
                 key={index}
                 onClick={() => onSelectVariation(index)}
-                className={`relative rounded-lg overflow-hidden border-2 transition-all duration-200 ${selectedVariationIndex === index ? 'border-fuchsia-500 ring-2 ring-fuchsia-500/50' : 'border-transparent hover:border-fuchsia-500/50'}`}
+                className={`relative rounded-lg overflow-hidden border-2 transition-all duration-200 ${selectedVariationIndex === index ? 'border-[#E96693] ring-2 ring-[#E96693]/50' : 'border-transparent hover:border-[#E96693]/50'}`}
               >
                 <img src={src} alt={`Variation ${index + 1}`} className="w-full h-auto object-cover" />
                 {selectedVariationIndex === index && (
-                   <div className="absolute inset-0 bg-fuchsia-500/50 flex items-center justify-center">
+                   <div className="absolute inset-0 bg-[#E96693]/50 flex items-center justify-center">
                     <span className="text-white font-bold text-lg">Selected</span>
                   </div>
                 )}
@@ -117,7 +117,7 @@ const VariationsPanel: React.FC<VariationsPanelProps> = ({
           <button
             onClick={onApplyVariation}
             disabled={selectedVariationIndex === null}
-            className="w-full bg-gradient-to-br from-green-600 to-green-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-green-800 disabled:to-green-700 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full bg-gradient-to-br from-[#63A798] to-[#96D6C9] text-[#03110F] font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
           >
             Apply Selected Variation
           </button>

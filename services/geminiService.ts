@@ -96,7 +96,7 @@ Output: Return ONLY the final edited image. Do not return text.`;
 
     console.log('Sending image and prompt to the model...');
     const response: GenerateContentResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image-preview',
+        model: 'gemini-2.5-flash-image',
         contents: { parts: [originalImagePart, textPart] },
     });
     console.log('Received response from model.', response);
@@ -130,7 +130,7 @@ Output: Return ONLY the final filtered image. Do not return text.`;
 
     console.log('Sending image and filter prompt to the model...');
     const response: GenerateContentResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image-preview',
+        model: 'gemini-2.5-flash-image',
         contents: { parts: [originalImagePart, textPart] },
     });
     console.log('Received response from model for filter.', response);
@@ -168,7 +168,7 @@ Output: Return ONLY the final adjusted image. Do not return text.`;
 
     console.log('Sending image and adjustment prompt to the model...');
     const response: GenerateContentResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image-preview',
+        model: 'gemini-2.5-flash-image',
         contents: { parts: [originalImagePart, textPart] },
     });
     console.log('Received response from model for adjustment.', response);
@@ -198,7 +198,7 @@ Output: Return ONLY the final generated image. Do not return text.`;
 
     const generateSingleVariation = async (): Promise<string> => {
         const response: GenerateContentResponse = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image-preview',
+            model: 'gemini-2.5-flash-image',
             contents: { parts: [originalImagePart, textPart] },
         });
         return handleApiResponse(response, 'variation');
@@ -263,7 +263,7 @@ Output: Return ONLY the final image with the infographic. Do not return text.`;
 
     console.log('Sending image and infographic prompt to the model...');
     const response: GenerateContentResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image-preview',
+        model: 'gemini-2.5-flash-image',
         contents: { parts: [originalImagePart, textPart] },
     });
     console.log('Received response from model for infographic.', response);
@@ -298,7 +298,7 @@ export const generateAnimation = async (
 
     onStatusUpdate("Warming up the animation engine...");
     let operation = await ai.models.generateVideos({
-        model: 'veo-2.0-generate-001',
+        model: 'veo-3.1-fast-generate-preview',
         prompt: prompt,
         image: {
             imageBytes: imageBase64,
