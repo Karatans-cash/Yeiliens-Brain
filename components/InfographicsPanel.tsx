@@ -23,7 +23,7 @@ const InfographicsPanel: React.FC<InfographicsPanelProps> = ({ onApplyInfographi
   };
 
   return (
-    <div className="w-full bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-4 flex flex-col gap-4 animate-fade-in backdrop-blur-sm">
+    <div className="w-full flex flex-col gap-4 animate-fade-in">
       <h3 className="text-lg font-semibold text-center text-[#EDEBE4]">Add Infographic to Image</h3>
       
       <div className="flex flex-col gap-4">
@@ -34,7 +34,7 @@ const InfographicsPanel: React.FC<InfographicsPanelProps> = ({ onApplyInfographi
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="e.g., 'A futuristic holographic bar chart in the top right'"
+                placeholder="e.g., 'A futuristic holographic bar chart'"
                 className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-4 focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
                 disabled={isLoading}
             />
@@ -46,7 +46,7 @@ const InfographicsPanel: React.FC<InfographicsPanelProps> = ({ onApplyInfographi
                 id="infographic-data"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
-                placeholder="e.g., Q1, 50 | Q2, 75 | Q3, 60 | Q4, 90"
+                placeholder="e.g., Q1, 50 | Q2, 75 | Q3, 60"
                 rows={4}
                 className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-4 focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
                 disabled={isLoading}

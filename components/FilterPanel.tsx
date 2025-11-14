@@ -41,16 +41,16 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onApplyFilter, isLoading }) =
   };
 
   return (
-    <div className="w-full bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-4 flex flex-col gap-4 animate-fade-in backdrop-blur-sm">
+    <div className="w-full flex flex-col gap-4 animate-fade-in">
       <h3 className="text-lg font-semibold text-center text-[#EDEBE4]">Apply a Filter</h3>
       
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {presets.map(preset => (
           <button
             key={preset.name}
             onClick={() => handlePresetClick(preset.prompt)}
             disabled={isLoading}
-            className={`w-full text-center bg-white/10 border border-transparent text-[#EDEBE4] font-semibold py-3 px-4 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/20 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed ${selectedPresetPrompt === preset.prompt ? 'ring-2 ring-offset-2 ring-offset-[#267364] ring-[#50FFE5]' : ''}`}
+            className={`w-full text-center bg-white/10 border border-transparent text-[#EDEBE4] font-semibold py-3 px-4 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/20 active:scale-95 text-sm disabled:opacity-50 disabled:cursor-not-allowed ${selectedPresetPrompt === preset.prompt ? 'ring-2 ring-offset-2 ring-offset-[#267364] ring-[#50FFE5]' : ''}`}
           >
             {preset.name}
           </button>
@@ -61,7 +61,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onApplyFilter, isLoading }) =
         type="text"
         value={customPrompt}
         onChange={handleCustomChange}
-        placeholder="Or describe a custom filter (e.g., '80s synthwave glow')"
+        placeholder="Or describe a custom filter"
         className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-4 focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60 text-base"
         disabled={isLoading}
       />

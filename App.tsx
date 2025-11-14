@@ -15,7 +15,7 @@ import CropPanel from './components/CropPanel';
 import VariationsPanel from './components/VariationsPanel';
 import InfographicsPanel from './components/InfographicsPanel';
 import AnimatePanel from './components/AnimatePanel';
-import { UndoIcon, RedoIcon, EyeIcon, FilmIcon, UserIcon } from './components/icons';
+import { UndoIcon, RedoIcon, EyeIcon, FilmIcon, UserIcon, SparkleIcon } from './components/icons';
 import StartScreen from './components/StartScreen';
 
 // Helper to convert a data URL string to a File object
@@ -423,7 +423,7 @@ const App: React.FC = () => {
     if (videoUrl) {
       return (
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-6 animate-fade-in">
-          <video src={videoUrl} controls autoPlay loop className="w-full h-auto object-contain max-h-[60vh] rounded-xl shadow-2xl" />
+          <video src={videoUrl} controls autoPlay loop className="w-full h-auto object-contain max-h-[70vh] rounded-xl shadow-2xl" />
           <div className="flex items-center gap-4">
             <button
               onClick={() => setVideoUrl(null)}
@@ -450,7 +450,7 @@ const App: React.FC = () => {
                 key={originalImageUrl}
                 src={originalImageUrl}
                 alt="Original"
-                className="w-full h-auto object-contain max-h-[60vh] rounded-xl pointer-events-none"
+                className="w-full h-auto object-contain max-h-[70vh] rounded-xl pointer-events-none"
             />
         )}
         {/* The current image is an overlay that fades in/out for comparison */}
@@ -460,7 +460,7 @@ const App: React.FC = () => {
             src={currentImageUrl}
             alt="Current"
             onClick={handleImageClick}
-            className={`absolute top-0 left-0 w-full h-auto object-contain max-h-[60vh] rounded-xl transition-opacity duration-200 ease-in-out ${isComparing ? 'opacity-0' : 'opacity-100'} ${activeTab === 'retouch' && !loadingTab ? 'cursor-crosshair' : ''}`}
+            className={`absolute top-0 left-0 w-full h-auto object-contain max-h-[70vh] rounded-xl transition-opacity duration-200 ease-in-out ${isComparing ? 'opacity-0' : 'opacity-100'} ${activeTab === 'retouch' && !loadingTab ? 'cursor-crosshair' : ''}`}
         />
       </div>
     );
@@ -472,161 +472,168 @@ const App: React.FC = () => {
         key={`crop-${currentImageUrl}`}
         src={currentImageUrl} 
         alt="Crop this image"
-        className="w-full h-auto object-contain max-h-[60vh] rounded-xl"
+        className="w-full h-auto object-contain max-h-[70vh] rounded-xl"
       />
     );
 
 
     return (
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-6 animate-fade-in">
-        <div className="relative w-full shadow-2xl rounded-xl overflow-hidden bg-black/20">
-            {activeTab === 'crop' ? (
-              <ReactCrop 
-                crop={crop} 
-                onChange={c => setCrop(c)} 
-                onComplete={c => setCompletedCrop(c)}
-                aspect={aspect}
-                className="max-h-[60vh]"
-              >
-                {cropImageElement}
-              </ReactCrop>
-            ) : imageDisplay }
-
-            {displayHotspot && !loadingTab && activeTab === 'retouch' && (
-                <div 
-                    className="absolute rounded-full w-6 h-6 bg-[#50FFE5]/50 border-2 border-white pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
-                    style={{ left: `${displayHotspot.x}px`, top: `${displayHotspot.y}px` }}
+      <div className="w-full flex flex-col md:flex-row gap-8 animate-fade-in">
+        {/* Main Content Area (Left) */}
+        <div className="w-full md:w-2/3 flex flex-col gap-6">
+          <div className="relative w-full shadow-2xl rounded-xl overflow-hidden bg-black/20 flex items-center justify-center">
+              {activeTab === 'crop' ? (
+                <ReactCrop 
+                  crop={crop} 
+                  onChange={c => setCrop(c)} 
+                  onComplete={c => setCompletedCrop(c)}
+                  aspect={aspect}
+                  className="max-h-[70vh]"
                 >
-                    <div className="absolute inset-0 rounded-full w-6 h-6 animate-ping bg-[#50FFE5]"></div>
-                </div>
-            )}
-        </div>
-        
-        <div className="w-full bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-2 flex items-center justify-center gap-1.5 backdrop-blur-sm">
-            {(['retouch', 'adjust', 'filters', 'crop', 'variations', 'infographics', 'animate'] as Tab[]).map(tab => (
-                 <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    disabled={loadingTab !== null}
-                    className={`w-full capitalize font-semibold py-3 px-4 rounded-md transition-all duration-200 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${
-                        activeTab === tab 
-                        ? 'bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white shadow-lg shadow-[#E96693]/40' 
-                        : 'text-[#63A798] hover:text-[#EDEBE4] hover:bg-white/10'
-                    }`}
-                >
-                    {tab}
-                </button>
-            ))}
-        </div>
-        
-        <div className="w-full">
-            {activeTab === 'retouch' && (
-                <div className="flex flex-col items-center gap-4">
-                    <p className="text-md text-[#63A798]">
-                        {editHotspot ? 'Great! Now describe your localized edit below.' : 'Click an area on the image to make a precise edit.'}
-                    </p>
-                    <form onSubmit={(e) => { e.preventDefault(); handleGenerate(); }} className="w-full flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            placeholder={editHotspot ? "e.g., 'change my shirt color to blue'" : "First click a point on the image"}
-                            className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-5 text-lg focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60"
-                            disabled={loadingTab !== null || !editHotspot}
-                        />
-                        {loadingTab === 'retouch' ? (
-                            <div className="flex items-center justify-center bg-[#03110F]/80 text-white font-bold py-5 px-8 text-lg rounded-lg border border-[#267364] w-[165px]">
-                                <Spinner className="h-6 w-6" />
-                            </div>
-                        ) : (
-                            <button 
-                                type="submit"
-                                className="bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white font-bold py-5 px-8 text-lg rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-[#50FFE5]/20 hover:shadow-xl hover:shadow-[#50FFE5]/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
-                                disabled={loadingTab !== null || !prompt.trim() || !editHotspot}
-                            >
-                                Generate
-                            </button>
-                        )}
-                    </form>
-                </div>
-            )}
-            {activeTab === 'crop' && <CropPanel onApplyCrop={handleApplyCrop} onSetAspect={setAspect} isLoading={loadingTab !== null} isCropping={!!completedCrop?.width && completedCrop.width > 0} />}
-            {activeTab === 'adjust' && <AdjustmentPanel onApplyAdjustment={handleApplyAdjustment} isLoading={loadingTab === 'adjust'} />}
-            {activeTab === 'filters' && <FilterPanel onApplyFilter={handleApplyFilter} isLoading={loadingTab === 'filters'} />}
-            {activeTab === 'variations' && (
-                <VariationsPanel 
-                    onGenerateVariations={handleGenerateVariations}
-                    onApplyVariation={handleApplyVariation}
-                    variations={variations}
-                    selectedVariationIndex={selectedVariationIndex}
-                    onSelectVariation={setSelectedVariationIndex}
-                    isLoading={loadingTab === 'variations'}
-                />
-            )}
-            {activeTab === 'infographics' && <InfographicsPanel onApplyInfographic={handleApplyInfographic} isLoading={loadingTab === 'infographics'} />}
-            {activeTab === 'animate' && <AnimatePanel onGenerateAnimation={handleGenerateAnimation} isLoading={loadingTab === 'animate'} statusMessage={animationStatusMessage} />}
-        </div>
-        
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-            <button 
-                onClick={handleUndo}
-                disabled={!canUndo || loadingTab !== null}
-                className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
-                aria-label="Undo last action"
-            >
-                <UndoIcon className="w-5 h-5 mr-2" />
-                Undo
-            </button>
-            <button 
-                onClick={handleRedo}
-                disabled={!canRedo || loadingTab !== null}
-                className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
-                aria-label="Redo last action"
-            >
-                <RedoIcon className="w-5 h-5 mr-2" />
-                Redo
-            </button>
-            
-            <div className="h-6 w-px bg-[#267364] mx-1 hidden sm:block"></div>
+                  {cropImageElement}
+                </ReactCrop>
+              ) : imageDisplay }
 
-            {canUndo && (
+              {displayHotspot && !loadingTab && activeTab === 'retouch' && (
+                  <div 
+                      className="absolute rounded-full w-6 h-6 bg-[#50FFE5]/50 border-2 border-white pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
+                      style={{ left: `${displayHotspot.x}px`, top: `${displayHotspot.y}px` }}
+                  >
+                      <div className="absolute inset-0 rounded-full w-6 h-6 animate-ping bg-[#50FFE5]"></div>
+                  </div>
+              )}
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-3">
               <button 
-                  onMouseDown={() => setIsComparing(true)}
-                  onMouseUp={() => setIsComparing(false)}
-                  onMouseLeave={() => setIsComparing(false)}
-                  onTouchStart={() => setIsComparing(true)}
-                  onTouchEnd={() => setIsComparing(false)}
-                  disabled={loadingTab !== null}
-                  className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Press and hold to see original image"
+                  onClick={handleUndo}
+                  disabled={!canUndo || loadingTab !== null}
+                  className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
+                  aria-label="Undo last action"
               >
-                  <EyeIcon className="w-5 h-5 mr-2" />
-                  Compare
+                  <UndoIcon className="w-5 h-5 mr-2" />
+                  Undo
               </button>
-            )}
-
-            <button 
-                onClick={handleReset}
-                disabled={!canUndo || loadingTab !== null}
-                className="text-center bg-transparent border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/10 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent"
+              <button 
+                  onClick={handleRedo}
+                  disabled={!canRedo || loadingTab !== null}
+                  className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-white/5"
+                  aria-label="Redo last action"
               >
-                Reset
-            </button>
-            <button 
-                onClick={handleUploadNew}
-                disabled={loadingTab !== null}
-                className="text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                Upload New
-            </button>
+                  <RedoIcon className="w-5 h-5 mr-2" />
+                  Redo
+              </button>
+              
+              <div className="h-6 w-px bg-[#267364] mx-1 hidden sm:block"></div>
 
-            <button 
-                onClick={handleDownload}
-                disabled={loadingTab !== null}
-                className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-[#63A798] to-[#96D6C9] text-[#03110F] font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-800 disabled:to-gray-700"
-            >
-                {videoUrl ? 'Download Video' : 'Download Image'}
-            </button>
+              {canUndo && (
+                <button 
+                    onMouseDown={() => setIsComparing(true)}
+                    onMouseUp={() => setIsComparing(false)}
+                    onMouseLeave={() => setIsComparing(false)}
+                    onTouchStart={() => setIsComparing(true)}
+                    onTouchEnd={() => setIsComparing(false)}
+                    disabled={loadingTab !== null}
+                    className="flex items-center justify-center text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Press and hold to see original image"
+                >
+                    <EyeIcon className="w-5 h-5 mr-2" />
+                    Compare
+                </button>
+              )}
+
+              <button 
+                  onClick={handleReset}
+                  disabled={!canUndo || loadingTab !== null}
+                  className="text-center bg-transparent border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/10 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-transparent"
+                >
+                  Reset
+              </button>
+              <button 
+                  onClick={handleUploadNew}
+                  disabled={loadingTab !== null}
+                  className="text-center bg-white/10 border border-[#63A798]/50 text-[#EDEBE4] font-semibold py-3 px-5 rounded-md transition-all duration-200 ease-in-out hover:bg-white/20 hover:border-white/30 active:scale-95 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                  Upload New
+              </button>
+
+              <button 
+                  onClick={handleDownload}
+                  disabled={loadingTab !== null}
+                  className="flex-grow sm:flex-grow-0 ml-auto bg-gradient-to-br from-[#63A798] to-[#96D6C9] text-[#03110F] font-bold py-3 px-5 rounded-md transition-all duration-300 ease-in-out shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-px active:scale-95 active:shadow-inner text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-800 disabled:to-gray-700"
+              >
+                  {videoUrl ? 'Download Video' : 'Download Image'}
+              </button>
+          </div>
+        </div>
+        
+        {/* Editor Panel (Right) */}
+        <div className="w-full md:w-1/3 flex flex-col gap-4 bg-[#267364]/50 border border-[#63A798]/50 rounded-lg p-6 backdrop-blur-sm">
+            <h3 className="text-xl font-bold text-center text-[#EDEBE4] flex items-center justify-center gap-2"><SparkleIcon className="w-5 h-5 text-[#96D6C9]"/> Editor Panel</h3>
+            <div className="w-full bg-[#03110F]/30 rounded-lg p-1.5 flex items-center justify-center gap-1.5">
+              {(['retouch', 'adjust', 'filters', 'crop', 'variations', 'infographics', 'animate'] as Tab[]).map(tab => (
+                   <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      disabled={loadingTab !== null}
+                      className={`w-full capitalize font-semibold py-2.5 px-2 rounded-md transition-all duration-200 text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                          activeTab === tab 
+                          ? 'bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white shadow-md shadow-[#E96693]/30' 
+                          : 'text-[#63A798] hover:text-[#EDEBE4] hover:bg-white/10'
+                      }`}
+                  >
+                      {tab}
+                  </button>
+              ))}
+            </div>
+        
+            <div className="w-full pt-2">
+                {activeTab === 'retouch' && (
+                    <div className="flex flex-col items-center gap-4">
+                        <p className="text-md text-[#63A798]">
+                            {editHotspot ? 'Great! Now describe your localized edit below.' : 'Click an area on the image to make a precise edit.'}
+                        </p>
+                        <form onSubmit={(e) => { e.preventDefault(); handleGenerate(); }} className="w-full flex flex-col items-center gap-2">
+                            <input
+                                type="text"
+                                value={prompt}
+                                onChange={(e) => setPrompt(e.target.value)}
+                                placeholder={editHotspot ? "e.g., 'change my shirt color to blue'" : "First click a point on the image"}
+                                className="flex-grow bg-[#03110F] border border-[#267364] text-[#EDEBE4] rounded-lg p-4 text-base focus:ring-2 focus:ring-[#50FFE5] focus:outline-none transition w-full disabled:cursor-not-allowed disabled:opacity-60"
+                                disabled={loadingTab !== null || !editHotspot}
+                            />
+                            {loadingTab === 'retouch' ? (
+                                <div className="w-full flex items-center justify-center bg-[#03110F]/80 text-white font-bold py-4 px-6 text-base rounded-lg border border-[#267364]">
+                                    <Spinner className="h-6 w-6" />
+                                </div>
+                            ) : (
+                                <button 
+                                    type="submit"
+                                    className="w-full bg-gradient-to-br from-[#E96693] to-[#50FFE5] text-white font-bold py-4 px-6 text-base rounded-lg transition-all duration-300 ease-in-out shadow-lg shadow-[#50FFE5]/20 hover:shadow-xl hover:shadow-[#50FFE5]/40 hover:-translate-y-px active:scale-95 active:shadow-inner disabled:from-gray-700 disabled:to-gray-800 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
+                                    disabled={loadingTab !== null || !prompt.trim() || !editHotspot}
+                                >
+                                    Generate
+                                </button>
+                            )}
+                        </form>
+                    </div>
+                )}
+                {activeTab === 'crop' && <CropPanel onApplyCrop={handleApplyCrop} onSetAspect={setAspect} isLoading={loadingTab !== null} isCropping={!!completedCrop?.width && completedCrop.width > 0} />}
+                {activeTab === 'adjust' && <AdjustmentPanel onApplyAdjustment={handleApplyAdjustment} isLoading={loadingTab === 'adjust'} />}
+                {activeTab === 'filters' && <FilterPanel onApplyFilter={handleApplyFilter} isLoading={loadingTab === 'filters'} />}
+                {activeTab === 'variations' && (
+                    <VariationsPanel 
+                        onGenerateVariations={handleGenerateVariations}
+                        onApplyVariation={handleApplyVariation}
+                        variations={variations}
+                        selectedVariationIndex={selectedVariationIndex}
+                        onSelectVariation={setSelectedVariationIndex}
+                        isLoading={loadingTab === 'variations'}
+                    />
+                )}
+                {activeTab === 'infographics' && <InfographicsPanel onApplyInfographic={handleApplyInfographic} isLoading={loadingTab === 'infographics'} />}
+                {activeTab === 'animate' && <AnimatePanel onGenerateAnimation={handleGenerateAnimation} isLoading={loadingTab === 'animate'} statusMessage={animationStatusMessage} />}
+            </div>
         </div>
       </div>
     );
