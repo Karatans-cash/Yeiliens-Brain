@@ -19,88 +19,72 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<!-- Added Inter for professional UI text, kept Bangers for Branding -->
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://esm.sh/react-image-crop@^11.0.6/dist/ReactCrop.css" />
 <style>
 .font-heading {
     font-family: 'Bangers', cursive;
+    letter-spacing: 0.05em;
 }
-@keyframes pulse-glow {
-    0%, 100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 10px rgba(80, 255, 229, 0.4));
-    }
-    50% {
-        transform: scale(1.03);
-        filter: drop-shadow(0 0 20px rgba(80, 255, 229, 0.8));
-    }
-}
-
-.animate-pulse-glow {
-    animation: pulse-glow 5s ease-in-out infinite;
+.font-body {
+    font-family: 'Inter', sans-serif;
 }
 
 @keyframes gradient-scroll {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(3, 17, 15, 0.5); 
+}
+::-webkit-scrollbar-thumb {
+    background: #267364; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #50FFE5; 
 }
 
 body {
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Inter', sans-serif; /* Professional default font */
     color: #EDEBE4;
     min-height: 100vh;
     overflow-x: hidden;
-    background: linear-gradient(-45deg, #267364, #03110F, #267364, #03110F);
+    /* Kept original palette */
+    background: linear-gradient(-45deg, #1A4D43, #020D0C, #133D35, #051A17); 
     background-size: 400% 400%;
     animation: gradient-scroll 20s ease-in-out infinite;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Add a subtle sparkle animation */
-@keyframes sparkle {
-  0% { transform: scale(0) rotate(0deg); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: scale(1.5) rotate(360deg); opacity: 0; }
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  top: 20%;
-  left: 10%;
-  width: 3px;
-  height: 3px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 
-    30vw 15vh 2px 2px #E9FFFB,
-    50vw 80vh 1px 1px #E9FFFB,
-    80vw 30vh 2px 2px #E9FFFB,
-    10vw 90vh 1px 1px #E9FFFB,
-    -15vw 40vh 2px 2px #E9FFFB;
-  animation: sparkle 8s linear infinite alternate;
-}
+/* Subtle texture overlay to make it look less flat */
 body::before {
-  content: '';
-  position: fixed;
-  top: 50%;
-  left: 70%;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 
-    15vw -30vh 1px 1px #E9FFFB,
-    -40vw 10vh 2px 2px #E9FFFB,
-    -20vw -45vh 1px 1px #E9FFFB;
-  animation: sparkle 12s linear infinite alternate;
-  animation-delay: -3s;
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: -1;
 }
 
 </style>

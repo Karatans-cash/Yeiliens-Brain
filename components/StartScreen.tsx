@@ -1,25 +1,32 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
 
 import React, { useState } from 'react';
-import { BrainMonsterRetouchIcon, BrainMonsterFilterIcon, BrainMonsterEffectIcon, BrainIcon, BrainMonsterHero, HeartIcon, SparkleIcon } from './icons';
+import { BrainMonsterRetouchIcon, BrainMonsterFilterIcon, BrainMonsterEffectIcon, BrainMonsterHero, HeartIcon, SparkleIcon, FilmIcon } from './icons';
 
 interface StartScreenProps {
   onFileSelect: (files: FileList | null) => void;
+  onSwitchToTextToImage: () => void;
+  onAnimateSelect: (files: FileList | null) => void;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onFileSelect }) => {
+const StartScreen: React.FC<StartScreenProps> = ({ onFileSelect, onSwitchToTextToImage, onAnimateSelect }) => {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFileSelect(e.target.files);
   };
+
+  const handleAnimateFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onAnimateSelect(e.target.files);
+  }
   
   return (
     <div 
-      className={`w-full max-w-5xl mx-auto text-center p-8 transition-all duration-300 rounded-2xl border-2 ${isDraggingOver ? 'bg-white/10 border-dashed border-[#96D6C9]' : 'border-transparent'}`}
+      className={`w-full max-w-6xl mx-auto p-4 md:p-8 transition-all duration-500`}
       onDragOver={(e) => { e.preventDefault(); setIsDraggingOver(true); }}
       onDragLeave={() => setIsDraggingOver(false)}
       onDrop={(e) => {
@@ -28,51 +35,102 @@ const StartScreen: React.FC<StartScreenProps> = ({ onFileSelect }) => {
         onFileSelect(e.dataTransfer.files);
       }}
     >
-      <div className="flex flex-col items-center gap-8 animate-fade-in">
+      <div className="flex flex-col items-center gap-12 animate-fade-in-up">
         
-        <div className="w-full max-w-md">
-           <BrainMonsterHero />
+        {/* Hero Section */}
+        <div className="w-full max-w-2xl flex flex-col items-center text-center gap-6">
+           <div className="w-48 h-auto drop-shadow-[0_0_20px_rgba(80,255,229,0.2)]">
+               <BrainMonsterHero />
+           </div>
+           
+           <div className="space-y-2">
+               <h2 className="text-3xl md:text-4xl font-heading text-[#EDEBE4] tracking-wide">
+                   Unleash Your Imagination
+               </h2>
+               <p className="text-[#96D6C9] text-lg font-light max-w-lg mx-auto leading-relaxed">
+                   Upload an image to start retouching, animating, or creating entirely new realities with AI.
+               </p>
+           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
-            <label htmlFor="image-upload-start" className="relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-[#03110F] bg-[#96D6C9] rounded-2xl cursor-pointer group hover:bg-opacity-90 transition-all duration-300 shadow-lg shadow-[#96D6C9]/20 hover:shadow-xl hover:shadow-[#96D6C9]/40 hover:-translate-y-1">
-                <div className="z-10 flex items-center justify-center">
-                    <div className="transition-transform duration-300 group-hover:scale-110">
-                        <HeartIcon className="w-6 h-6 mr-3 text-[#E96693]" />
-                    </div>
-                    Upload an Image
-                </div>
+        {/* Action Buttons - Clean & Modern */}
+        <div className={`flex flex-col items-center gap-6 w-full max-w-xl p-8 rounded-3xl border transition-all duration-300 ${isDraggingOver ? 'bg-[#50FFE5]/10 border-[#50FFE5] scale-105' : 'bg-black/20 backdrop-blur-xl border-white/5'}`}>
+            
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 <button
+                    onClick={onSwitchToTextToImage}
+                    className="relative group overflow-hidden flex flex-col items-center justify-center px-6 py-6 bg-[#267364]/30 hover:bg-[#267364]/60 border border-white/10 hover:border-[#50FFE5]/50 rounded-2xl transition-all duration-300"
+                 >
+                    <SparkleIcon className="w-8 h-8 mb-3 text-[#50FFE5] group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-white">Create from Text</span>
+                    <span className="text-xs text-[#96D6C9] mt-1">Generate new images</span>
+                </button>
+
+                <label htmlFor="animation-upload-start" className="relative group overflow-hidden flex flex-col items-center justify-center px-6 py-6 bg-[#267364]/30 hover:bg-[#267364]/60 border border-white/10 hover:border-[#F4D03F]/50 rounded-2xl cursor-pointer transition-all duration-300">
+                    <FilmIcon className="w-8 h-8 mb-3 text-[#F4D03F] group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-white">Animate Image</span>
+                    <span className="text-xs text-[#96D6C9] mt-1">Video from static</span>
+                </label>
+                <input id="animation-upload-start" type="file" className="hidden" accept="image/*" onChange={handleAnimateFileChange} />
+            </div>
+
+            <div className="flex items-center w-full gap-4">
+              <div className="flex-grow h-px bg-gradient-to-r from-transparent via-[#63A798]/30 to-transparent"></div>
+              <span className="text-xs font-medium text-[#63A798] uppercase tracking-widest">or</span>
+              <div className="flex-grow h-px bg-gradient-to-r from-transparent via-[#63A798]/30 to-transparent"></div>
+            </div>
+            
+            <label htmlFor="image-upload-start" className="w-full relative flex items-center justify-center gap-3 px-8 py-5 text-lg font-bold text-[#03110F] bg-gradient-to-r from-[#50FFE5] to-[#63A798] rounded-xl cursor-pointer shadow-lg shadow-[#50FFE5]/10 hover:shadow-[#50FFE5]/30 hover:-translate-y-0.5 transition-all duration-300">
+                <HeartIcon className="w-6 h-6 text-[#03110F]" />
+                Upload & Edit Image
             </label>
             <input id="image-upload-start" type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-            <p className="text-sm text-[#63A798]">or drag and drop your brain-file</p>
+            
+            <p className={`text-sm ${isDraggingOver ? 'text-[#50FFE5]' : 'text-[#63A798]/70'}`}>
+                {isDraggingOver ? 'Drop it like it\'s hot!' : 'Drag & drop anywhere to start'}
+            </p>
         </div>
 
-        <div className="mt-8 w-full">
+        {/* Feature Cards - Glassmorphism */}
+        <div className="w-full mt-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#267364] p-6 rounded-2xl border border-[#63A798]/50 flex flex-col items-center text-center backdrop-blur-md transition-all duration-300 hover:border-[#96D6C9]/80 hover:shadow-[0_0_25px_rgba(80,255,229,0.3)] hover:-translate-y-2">
-                    <BrainMonsterRetouchIcon className="w-28 h-28 mb-4" />
-                    <h3 className="text-lg font-bold text-[#EDEBE4] tracking-wider flex items-center gap-2 font-heading">
-                       <SparkleIcon className="w-4 h-4 text-[#96D6C9]"/>
-                       IQ 9000 Retouching
+                {/* Feature 1 */}
+                <div className="group bg-black/20 backdrop-blur-md p-8 rounded-3xl border border-white/5 hover:border-[#50FFE5]/30 hover:bg-black/30 transition-all duration-500 flex flex-col items-center text-center">
+                    <div className="w-20 h-20 mb-6 p-4 rounded-full bg-[#50FFE5]/5 group-hover:bg-[#50FFE5]/10 transition-colors">
+                        <BrainMonsterRetouchIcon className="w-full h-full object-contain drop-shadow-lg" />
+                    </div>
+                    <h3 className="text-xl font-heading text-[#EDEBE4] tracking-wide mb-3 group-hover:text-[#50FFE5] transition-colors">
+                       Smart Retouch
                     </h3>
-                    <p className="mt-2 text-[#E9FFFB] text-sm">Remove objects with brain-powered precision! Zap away pesky pixels with startling accuracy.</p>
+                    <p className="text-[#96D6C9]/80 text-sm leading-relaxed">
+                        Remove objects or fix details with localized AI editing. Precision meets magic.
+                    </p>
                 </div>
-                <div className="bg-[#267364] p-6 rounded-2xl border border-[#63A798]/50 flex flex-col items-center text-center backdrop-blur-md transition-all duration-300 hover:border-[#96D6C9]/80 hover:shadow-[0_0_25px_rgba(80,255,229,0.3)] hover:-translate-y-2">
-                    <BrainMonsterFilterIcon className="w-28 h-28 mb-4" />
-                    <h3 className="text-lg font-bold text-[#EDEBE4] tracking-wider flex items-center gap-2 font-heading">
-                       <SparkleIcon className="w-4 h-4 text-[#96D6C9]"/>
-                       Cosmic-Cool Filters
+
+                {/* Feature 2 */}
+                <div className="group bg-black/20 backdrop-blur-md p-8 rounded-3xl border border-white/5 hover:border-[#E96693]/30 hover:bg-black/30 transition-all duration-500 flex flex-col items-center text-center">
+                    <div className="w-20 h-20 mb-6 p-4 rounded-full bg-[#E96693]/5 group-hover:bg-[#E96693]/10 transition-colors">
+                        <BrainMonsterFilterIcon className="w-full h-full object-contain drop-shadow-lg" />
+                    </div>
+                    <h3 className="text-xl font-heading text-[#EDEBE4] tracking-wide mb-3 group-hover:text-[#E96693] transition-colors">
+                       Creative Filters
                     </h3>
-                    <p className="mt-2 text-[#E9FFFB] text-sm">Turn your pics into something weirder! Sunglasses make everything 200% more artistic.</p>
+                    <p className="text-[#96D6C9]/80 text-sm leading-relaxed">
+                        Transform reality with stylistic filters. From Cyberpunk to Watercolor in seconds.
+                    </p>
                 </div>
-                <div className="bg-[#267364] p-6 rounded-2xl border border-[#63A798]/50 flex flex-col items-center text-center backdrop-blur-md transition-all duration-300 hover:border-[#96D6C9]/80 hover:shadow-[0_0_25px_rgba(80,255,229,0.3)] hover:-translate-y-2">
-                    <BrainMonsterEffectIcon className="w-28 h-28 mb-4" />
-                    <h3 className="text-lg font-bold text-[#EDEBE4] tracking-wider flex items-center gap-2 font-heading">
-                        <SparkleIcon className="w-4 h-4 text-[#96D6C9]"/>
-                        Otherworldly Effects
+
+                {/* Feature 3 */}
+                <div className="group bg-black/20 backdrop-blur-md p-8 rounded-3xl border border-white/5 hover:border-[#F4D03F]/30 hover:bg-black/30 transition-all duration-500 flex flex-col items-center text-center">
+                    <div className="w-20 h-20 mb-6 p-4 rounded-full bg-[#F4D03F]/5 group-hover:bg-[#F4D03F]/10 transition-colors">
+                        <BrainMonsterEffectIcon className="w-full h-full object-contain drop-shadow-lg" />
+                    </div>
+                    <h3 className="text-xl font-heading text-[#EDEBE4] tracking-wide mb-3 group-hover:text-[#F4D03F] transition-colors">
+                        Magic Effects
                     </h3>
-                    <p className="mt-2 text-[#E9FFFB] text-sm">Bend reality, just a little. It's fun! You might even make some new, fluffy friends.</p>
-                    <p className="mt-2 text-xs text-[#63A798] opacity-80">(Warning: may attract space llamas.)</p>
+                    <p className="text-[#96D6C9]/80 text-sm leading-relaxed">
+                        Harmonize composites, fix perspective, or add new characters seamlessly.
+                    </p>
                 </div>
             </div>
         </div>
